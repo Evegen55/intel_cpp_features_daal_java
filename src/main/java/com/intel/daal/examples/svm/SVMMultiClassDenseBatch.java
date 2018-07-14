@@ -47,12 +47,14 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class SVMMultiClassDenseBatch {
 
     /* Input data set parameters */
-    private static final String trainDatasetFileName = "../data/batch/svm_multi_class_train_dense.csv";
+    private static final String trainDatasetFileName = dataRoot + "/data/batch/svm_multi_class_train_dense.csv";
 
-    private static final String testDatasetFileName  = "../data/batch/svm_multi_class_test_dense.csv";
+    private static final String testDatasetFileName  = dataRoot + "/data/batch/svm_multi_class_test_dense.csv";
 
     private static final int nFeatures     = 20;
     private static final int nClasses      = 5;

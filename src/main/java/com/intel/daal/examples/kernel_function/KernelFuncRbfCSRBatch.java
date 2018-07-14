@@ -34,10 +34,12 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class KernelFuncRbfCSRBatch {
     /* Input data set parameters */
-    private static final String leftDatasetFileName  = "../data/batch/kernel_function_csr.csv";
-    private static final String rightDatasetFileName = "../data/batch/kernel_function_csr.csv";
+    private static final String leftDatasetFileName  = dataRoot + "/data/batch/kernel_function_csr.csv";
+    private static final String rightDatasetFileName = dataRoot + "/data/batch/kernel_function_csr.csv";
 
     private static final double sigma = 1.0;   /* RBF kernel coefficient */
 

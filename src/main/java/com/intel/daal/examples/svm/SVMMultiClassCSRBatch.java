@@ -47,14 +47,16 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class SVMMultiClassCSRBatch {
 
     /* Input data set parameters */
-    private static final String trainDatasetFileName     = "../data/batch/svm_multi_class_train_csr.csv";
-    private static final String trainGroundTruthFileName = "../data/batch/svm_multi_class_train_labels.csv";
+    private static final String trainDatasetFileName     = dataRoot + "/data/batch/svm_multi_class_train_csr.csv";
+    private static final String trainGroundTruthFileName = dataRoot + "/data/batch/svm_multi_class_train_labels.csv";
 
-    private static final String testDatasetFileName     = "../data/batch/svm_multi_class_test_csr.csv";
-    private static final String testGroundTruthFileName = "../data/batch/svm_multi_class_test_labels.csv";
+    private static final String testDatasetFileName     = dataRoot + "/data/batch/svm_multi_class_test_csr.csv";
+    private static final String testGroundTruthFileName = dataRoot + "/data/batch/svm_multi_class_test_labels.csv";
 
     private static final int nClasses      = 5;
 

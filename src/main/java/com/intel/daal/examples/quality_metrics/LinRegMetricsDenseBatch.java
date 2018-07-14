@@ -45,9 +45,11 @@ import com.intel.daal.algorithms.linear_regression.quality_metric.*;
 import com.intel.daal.algorithms.linear_regression.quality_metric_set.*;
 import com.intel.daal.data_management.data.DataCollection;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class LinRegMetricsDenseBatch {
     /* Input data set parameters */
-    private static final String trainDatasetFileName = "../data/batch/linear_regression_train.csv";
+    private static final String trainDatasetFileName = dataRoot + "/data/batch/linear_regression_train.csv";
 
     private static final int nFeatures           = 10;
     private static final int nDependentVariables = 2;

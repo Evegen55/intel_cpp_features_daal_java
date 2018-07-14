@@ -48,11 +48,13 @@ import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 import com.intel.daal.data_management.data.*;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class GbtClsDenseBatch {
     /* Input data set parameters */
-    private static final String trainDataset = "../data/batch/df_classification_train.csv";
+    private static final String trainDataset = dataRoot + "/data/batch/df_classification_train.csv";
 
-    private static final String testDataset  = "../data/batch/df_classification_test.csv";
+    private static final String testDataset  = dataRoot + "/data/batch/df_classification_test.csv";
 
     private static final int nFeatures     = 3;
     private static final int nClasses      = 5;

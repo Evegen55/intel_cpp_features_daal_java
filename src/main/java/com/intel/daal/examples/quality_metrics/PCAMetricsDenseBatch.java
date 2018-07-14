@@ -37,9 +37,11 @@ import com.intel.daal.data_management.data.DataCollection;
 import com.intel.daal.data_management.data_source.DataSource;
 import com.intel.daal.data_management.data_source.FileDataSource;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class PCAMetricsDenseBatch {
     /* Input data set parameters */
-    private static final String trainDatasetFileName = "../data/batch/pca_normalized.csv";
+    private static final String trainDatasetFileName = dataRoot + "/data/batch/pca_normalized.csv";
 
     private static final long nVectors = 1000;
     private static final long nComponents = 5;

@@ -36,11 +36,13 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 
 class SVDDenseDistr {
     /* Input data set parameters */
-    private static final String[] dataset = { "../data/distributed/svd_1.csv", "../data/distributed/svd_2.csv",
-            "../data/distributed/svd_3.csv", "../data/distributed/svd_4.csv" };
+    private static final String[] dataset = { dataRoot + "/data/distributed/svd_1.csv", dataRoot + "/data/distributed/svd_2.csv",
+            dataRoot + "/data/distributed/svd_3.csv", dataRoot + "/data/distributed/svd_4.csv" };
 
     private static final int nNodes          = dataset.length;
 

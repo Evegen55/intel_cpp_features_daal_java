@@ -40,10 +40,12 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class PCACorCSRBatch {
     /* Input data set parameters */
     private static DaalContext  context = new DaalContext();
-    private static final String datasetFileName = "../data/batch/covcormoments_csr.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/covcormoments_csr.csv";
 
     public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
         /* Read a data set from a file and create a numeric table for storing the input data */

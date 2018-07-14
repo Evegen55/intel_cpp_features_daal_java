@@ -44,13 +44,15 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 
 class PCACorCSRDistr {
     /* Input data set parameters */
-    private static final String datasetFileNames[] = new String[] { "../data/distributed/covcormoments_csr_1.csv",
-                                                                    "../data/distributed/covcormoments_csr_2.csv",
-                                                                    "../data/distributed/covcormoments_csr_3.csv",
-                                                                    "../data/distributed/covcormoments_csr_4.csv"
+    private static final String datasetFileNames[] = new String[] { dataRoot + "/data/distributed/covcormoments_csr_1.csv",
+                                                                    dataRoot + "/data/distributed/covcormoments_csr_2.csv",
+                                                                    dataRoot + "/data/distributed/covcormoments_csr_3.csv",
+                                                                    dataRoot + "/data/distributed/covcormoments_csr_4.csv"
                                                                   };
     private static final int nNodes = 4;
 

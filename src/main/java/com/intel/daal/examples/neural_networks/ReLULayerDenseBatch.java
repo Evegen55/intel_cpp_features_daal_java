@@ -33,12 +33,14 @@ import com.intel.daal.data_management.data.HomogenTensor;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-RELULAYERBATCH">
  * @example ReLULayerDenseBatch.java
  */
 class ReLULayerDenseBatch {
-    private static final String datasetFileName = "../data/batch/layer.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/layer.csv";
     private static DaalContext context = new DaalContext();
 
     public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {

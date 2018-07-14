@@ -38,10 +38,12 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 
 class SVDDenseBatch {
     /* Input data set parameters */
-    private static final String dataset  = "../data/batch/svd.csv";
+    private static final String dataset  = dataRoot + "/data/batch/svd.csv";
 
     private static DaalContext context = new DaalContext();
 

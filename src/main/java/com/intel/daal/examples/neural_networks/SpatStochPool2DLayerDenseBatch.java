@@ -34,13 +34,16 @@ import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
 import com.intel.daal.data_management.data.NumericTable;
+
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-SPATSTOCHPOOL2DLAYERDENSEBATCH">
  * @example SpatStochPool2DLayerDenseBatch.java
  */
 class SpatStochPool2DLayerDenseBatch {
     /* Input non-negative data set */
-    private static final String datasetFileName = "../data/batch/layer_non_negative.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/layer_non_negative.csv";
     private static DaalContext context = new DaalContext();
     private static long pyramidHeight = 2;
     static float data[] = { 1,  2,  3,  4, 5,  6,  7,  8,

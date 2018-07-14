@@ -33,12 +33,14 @@ import com.intel.daal.data_management.data.HomogenTensor;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-SOFTMAXLAYERBATCH">
  * @example SoftmaxLayerDenseBatch.java
  */
 class SoftmaxLayerDenseBatch {
-    private static final String datasetFileName = "../data/batch/layer.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/layer.csv";
 
     /* Softmax layer parameter */
     private static final long dimension = 1;  /* Starting data dimension index to compute softmax */

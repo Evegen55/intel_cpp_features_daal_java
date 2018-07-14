@@ -41,12 +41,14 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 
 class PCACorDenseDistr {
     /* Input data set parameters */
-    private static final String[] dataset = { "../data/distributed/pca_normalized_1.csv",
-                                              "../data/distributed/pca_normalized_2.csv", "../data/distributed/pca_normalized_3.csv",
-                                              "../data/distributed/pca_normalized_4.csv",
+    private static final String[] dataset = { dataRoot + "/data/distributed/pca_normalized_1.csv",
+                                              dataRoot + "/data/distributed/pca_normalized_2.csv", dataRoot + "/data/distributed/pca_normalized_3.csv",
+                                              dataRoot + "/data/distributed/pca_normalized_4.csv",
                                             };
     private static final int nNodes = 4;
 

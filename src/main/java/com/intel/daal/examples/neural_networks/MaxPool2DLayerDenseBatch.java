@@ -34,12 +34,15 @@ import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
 import com.intel.daal.data_management.data.NumericTable;
+
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-MAXIMUMPOOLING2DLAYERBATCH">
  * @example MaxPool2DLayerDenseBatch.java
  */
 class MaxPool2DLayerDenseBatch {
-    private static final String datasetFileName = "../data/batch/layer.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/layer.csv";
     private static DaalContext context = new DaalContext();
 
     public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {

@@ -40,6 +40,8 @@ import com.intel.daal.data_management.data_source.DataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-NEURALNETWORKDISTR">
  * @example NeuralNetDenseDistr.java
@@ -51,16 +53,16 @@ class NeuralNetDenseDistr {
     private static final int batchSizeLocal = batchSize / nNodes;
 
     /* Input data set parameters */
-    private static final String[] trainDatasetFiles     = { "../data/distributed/neural_network_train_dense_1.csv",
-                                                            "../data/distributed/neural_network_train_dense_2.csv",
-                                                            "../data/distributed/neural_network_train_dense_3.csv",
-                                                            "../data/distributed/neural_network_train_dense_4.csv" };
-    private static final String[] trainGroundTruthFiles = { "../data/distributed/neural_network_train_ground_truth_1.csv",
-                                                            "../data/distributed/neural_network_train_ground_truth_2.csv",
-                                                            "../data/distributed/neural_network_train_ground_truth_3.csv",
-                                                            "../data/distributed/neural_network_train_ground_truth_4.csv" };
-    private static final String testDatasetFile      = "../data/batch/neural_network_test.csv";
-    private static final String testGroundTruthFile  = "../data/batch/neural_network_test_ground_truth.csv";
+    private static final String[] trainDatasetFiles     = { dataRoot + "/data/distributed/neural_network_train_dense_1.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_dense_2.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_dense_3.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_dense_4.csv" };
+    private static final String[] trainGroundTruthFiles = { dataRoot + "/data/distributed/neural_network_train_ground_truth_1.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_ground_truth_2.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_ground_truth_3.csv",
+                                                            dataRoot + "/data/distributed/neural_network_train_ground_truth_4.csv" };
+    private static final String testDatasetFile      = dataRoot + "/data/batch/neural_network_test.csv";
+    private static final String testGroundTruthFile  = dataRoot + "/data/batch/neural_network_test_ground_truth.csv";
 
     private static DistributedStep2Master net;
     private static DistributedStep1Local[] netLocal = new DistributedStep1Local[nNodes];

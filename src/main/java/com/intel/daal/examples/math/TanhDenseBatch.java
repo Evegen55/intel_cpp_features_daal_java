@@ -28,13 +28,15 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-TANHDENSEBATCH">
  * @example TanhDenseBatch.java
  */
 
 class TanhDenseBatch {
-    private static final String dataset = "../data/batch/covcormoments_dense.csv";
+    private static final String dataset = dataRoot + "/data/batch/covcormoments_dense.csv";
     private static DaalContext context = new DaalContext();
 
     public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {

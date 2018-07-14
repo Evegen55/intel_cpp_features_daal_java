@@ -34,6 +34,8 @@ import com.intel.daal.data_management.data.KeyValueDataCollection;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 /**
  * <a name="DAAL-EXAMPLE-JAVA-CONCATLAYERBATCH">
  * @example EltwiseSumLayerDenseBatch.java
@@ -41,7 +43,7 @@ import com.intel.daal.services.DaalContext;
 class EltwiseSumLayerDenseBatch {
     private static DaalContext context = new DaalContext();
 
-    private static final String datasetFileName = "../data/batch/layer.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/layer.csv";
     private static final long   nInputs = 3;
 
     public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
