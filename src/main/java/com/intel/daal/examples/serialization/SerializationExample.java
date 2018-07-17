@@ -40,9 +40,11 @@ import com.intel.daal.examples.utils.Service;
 
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class SerializationExample {
     /* Input data set parameters */
-    private static final String dataset  = "../data/batch/serialization.csv";
+    private static final String dataset  = dataRoot + "/data/batch/serialization.csv";
 
     private static DaalContext context = new DaalContext();
 

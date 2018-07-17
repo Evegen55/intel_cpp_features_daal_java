@@ -1,17 +1,21 @@
 /* file: LibraryVersionInfoExample.java */
-/*******************************************************************************
-* Copyright 2014-2018 Intel Corporation.
-*
-* This software and the related documents are Intel copyrighted  materials,  and
-* your use of  them is  governed by the  express license  under which  they were
-* provided to you (License).  Unless the License provides otherwise, you may not
-* use, modify, copy, publish, distribute,  disclose or transmit this software or
-* the related documents without Intel's prior written permission.
-*
-* This software and the related documents  are provided as  is,  with no express
-* or implied  warranties,  other  than those  that are  expressly stated  in the
-* License.
-*******************************************************************************/
+/**
+ * Copyright 2014-2018 Intel Corporation.
+ * <p>
+ * This software and the related documents are Intel copyrighted  materials,  and
+ * your use of  them is  governed by the  express license  under which  they were
+ * provided to you (License).  Unless the License provides otherwise, you may not
+ * use, modify, copy, publish, distribute,  disclose or transmit this software or
+ * the related documents without Intel's prior written permission.
+ * <p>
+ * This software and the related documents  are provided as  is,  with no express
+ * or implied  warranties,  other  than those  that are  expressly stated  in the
+ * License.
+ *
+ * <a name="DAAL-EXAMPLE-JAVA-LIBRARYVERSIONINFOEXAMPLE">
+ *
+ * @example LibraryVersionInfoExample.java
+ */
 
 /*
 //  Content:
@@ -31,7 +35,9 @@ import com.intel.daal.services.Environment;
 import com.intel.daal.services.LibraryVersionInfo;
 
 class LibraryVersionInfoExample {
-    public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
+
+    public static void main(String[] args) {
+
         LibraryVersionInfo vi = new LibraryVersionInfo();
 
         System.out.println("Major version:          " + vi.getMajorVersion());
@@ -42,5 +48,7 @@ class LibraryVersionInfoExample {
         System.out.println("Build revision:         " + vi.getBuildRev());
         System.out.println("Name:                   " + vi.getName());
         System.out.println("Processor optimization: " + vi.getProcessor());
+        System.out.println("CPU ID:                 " + Environment.getCpuId(CpuTypeEnable.cpu_default));
+        System.out.println("Number of threads:      " + Environment.getNumberOfThreads());
     }
 }

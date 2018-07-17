@@ -44,7 +44,8 @@ class FullyconLayerDenseBatch {
     private static DaalContext context = new DaalContext();
     private static final long m = 5;
 
-    public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
+    public static void main(String[] args) {
+
         /* Read datasetFileName from a file and create a tensor to store forward input data */
         Tensor data = Service.readTensorFromCSV(context, datasetFileName);
 

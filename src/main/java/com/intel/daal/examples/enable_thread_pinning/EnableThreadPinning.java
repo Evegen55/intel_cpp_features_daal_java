@@ -37,9 +37,11 @@ import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 import com.intel.daal.services.Environment;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class EnableThreadPinning {
     /* Input data set parameters */
-    private static final String dataset       = "../data/batch/kmeans_dense.csv";
+    private static final String dataset       = dataRoot + "/data/batch/kmeans_dense.csv";
     private static final int    nClusters     = 20;
 
     /* K-Means algorithm parameters */
