@@ -59,8 +59,10 @@ class FullyconLayerDenseBatch {
         FullyConnectedForwardResult forwardResult = forwardLayer.compute();
 
         /* Print the results of the forward fully-connected layer */
-        Service.printTensor("Forward fully-connected layer result (first 5 rows):", forwardResult.get(ForwardResultId.value), 5, 0);
-        Service.printTensor("Forward fully-connected layer weights (first 5 rows):", forwardResult.get(FullyConnectedLayerDataId.auxWeights), 5, 0);
+        Service.printTensor("Forward fully-connected layer result (first 5 rows):",
+                            forwardResult.get(ForwardResultId.value), 5, 0);
+        Service.printTensor("Forward fully-connected layer weights (first 5 rows):",
+                            forwardResult.get(FullyConnectedLayerDataId.auxWeights), 5, 0);
 
         /* Create input gradient tensor for backward fully-connected layer */
         long[] dims = forwardResult.get(ForwardResultId.value).getDimensions();

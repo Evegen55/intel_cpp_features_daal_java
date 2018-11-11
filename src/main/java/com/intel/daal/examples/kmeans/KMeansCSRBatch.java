@@ -35,9 +35,11 @@ import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class KMeansCSRBatch {
     /* Input data set parameters */
-    private static final String datasetFileName = "../data/batch/kmeans_csr.csv";
+    private static final String datasetFileName = dataRoot + "/data/batch/kmeans_csr.csv";
     private static final int    nClusters       = 20;
 
     /* K-Means algorithm parameters */
