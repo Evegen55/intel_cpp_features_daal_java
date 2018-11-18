@@ -31,32 +31,42 @@
 package com.intel.daal.examples.linear_regression;
 
 import com.intel.daal.algorithms.linear_regression.Model;
-import com.intel.daal.algorithms.linear_regression.prediction.*;
-import com.intel.daal.algorithms.linear_regression.training.*;
-import com.intel.daal.data_management.data.NumericTable;
+import com.intel.daal.algorithms.linear_regression.prediction.PredictionBatch;
+import com.intel.daal.algorithms.linear_regression.prediction.PredictionInputId;
+import com.intel.daal.algorithms.linear_regression.prediction.PredictionMethod;
+import com.intel.daal.algorithms.linear_regression.prediction.PredictionResult;
+import com.intel.daal.algorithms.linear_regression.prediction.PredictionResultId;
+import com.intel.daal.algorithms.linear_regression.training.TrainingBatch;
+import com.intel.daal.algorithms.linear_regression.training.TrainingInputId;
+import com.intel.daal.algorithms.linear_regression.training.TrainingMethod;
+import com.intel.daal.algorithms.linear_regression.training.TrainingResult;
+import com.intel.daal.algorithms.linear_regression.training.TrainingResultId;
 import com.intel.daal.data_management.data.HomogenNumericTable;
 import com.intel.daal.data_management.data.MergedNumericTable;
+import com.intel.daal.data_management.data.NumericTable;
 import com.intel.daal.data_management.data_source.DataSource;
 import com.intel.daal.data_management.data_source.FileDataSource;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class LinRegNormEqDenseBatch {
     /* Input data set parameters */
-    private static final String trainDatasetFileName = "../data/batch/linear_regression_train.csv";
+    private static final String trainDatasetFileName = dataRoot + "/data/batch/linear_regression_train.csv";
 
-    private static final String testDatasetFileName  = "../data/batch/linear_regression_test.csv";
+    private static final String testDatasetFileName = dataRoot + "/data/batch/linear_regression_test.csv";
 
-    private static final int nFeatures           = 10;  /* Number of features in training and testing data sets */
+    private static final int nFeatures = 10;  /* Number of features in training and testing data sets */
     private static final int nDependentVariables = 2;   /* Number of dependent variables that correspond to each observation */
 
-    static Model        model;
+    static Model model;
     static NumericTable results;
     static NumericTable testDependentVariables;
 
     private static DaalContext context = new DaalContext();
 
-    public static void main(String[] args) throws java.io.FileNotFoundException, java.io.IOException {
+    public static void main(String[] args) {
 
         trainModel();
 
@@ -71,8 +81,8 @@ class LinRegNormEqDenseBatch {
 
         /* Initialize FileDataSource to retrieve the input data from a .csv file */
         FileDataSource trainDataSource = new FileDataSource(context, trainDatasetFileName,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
+                                                            DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                            DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
 
         /* Create Numeric Tables for training data and labels */
         NumericTable trainData = new HomogenNumericTable(context, Float.class, nFeatures, 0, NumericTable.AllocationFlag.DoNotAllocate);
@@ -100,8 +110,8 @@ class LinRegNormEqDenseBatch {
     private static void testModel() {
         /* Initialize FileDataSource to retrieve the input data from a .csv file */
         FileDataSource testDataSource = new FileDataSource(context, testDatasetFileName,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
+                                                           DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                           DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
 
         /* Create Numeric Tables for testing data and labels */
         NumericTable testData = new HomogenNumericTable(context, Float.class, nFeatures, 0, NumericTable.AllocationFlag.DoNotAllocate);
@@ -115,7 +125,7 @@ class LinRegNormEqDenseBatch {
 
         /* Create algorithm objects to predict values of multiple linear regression with the default method */
         PredictionBatch linearRegressionPredict = new PredictionBatch(context, Float.class,
-                PredictionMethod.defaultDense);
+                                                                      PredictionMethod.defaultDense);
 
         linearRegressionPredict.input.set(PredictionInputId.data, testData);
         linearRegressionPredict.input.set(PredictionInputId.model, model);
