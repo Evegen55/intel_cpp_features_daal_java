@@ -1,17 +1,17 @@
 /* file: Service.java */
 /*******************************************************************************
-* Copyright 2014-2018 Intel Corporation.
-*
-* This software and the related documents are Intel copyrighted  materials,  and
-* your use of  them is  governed by the  express license  under which  they were
-* provided to you (License).  Unless the License provides otherwise, you may not
-* use, modify, copy, publish, distribute,  disclose or transmit this software or
-* the related documents without Intel's prior written permission.
-*
-* This software and the related documents  are provided as  is,  with no express
-* or implied  warranties,  other  than those  that are  expressly stated  in the
-* License.
-*******************************************************************************/
+ * Copyright 2014-2018 Intel Corporation.
+ *
+ * This software and the related documents are Intel copyrighted  materials,  and
+ * your use of  them is  governed by the  express license  under which  they were
+ * provided to you (License).  Unless the License provides otherwise, you may not
+ * use, modify, copy, publish, distribute,  disclose or transmit this software or
+ * the related documents without Intel's prior written permission.
+ *
+ * This software and the related documents  are provided as  is,  with no express
+ * or implied  warranties,  other  than those  that are  expressly stated  in the
+ * License.
+ *******************************************************************************/
 
 /*
  //  Content:
@@ -21,6 +21,15 @@
 
 package com.intel.daal.examples.utils;
 
+import com.intel.daal.data_management.data.CSRNumericTable;
+import com.intel.daal.data_management.data.HomogenNumericTable;
+import com.intel.daal.data_management.data.HomogenTensor;
+import com.intel.daal.data_management.data.NumericTable;
+import com.intel.daal.data_management.data.Tensor;
+import com.intel.daal.data_management.data_source.DataSource;
+import com.intel.daal.data_management.data_source.FileDataSource;
+import com.intel.daal.services.DaalContext;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,16 +38,8 @@ import java.nio.IntBuffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import com.intel.daal.data_management.data.CSRNumericTable;
-import com.intel.daal.data_management.data.HomogenNumericTable;
-import com.intel.daal.data_management.data.NumericTable;
-import com.intel.daal.data_management.data.Tensor;
-import com.intel.daal.data_management.data.HomogenTensor;
-import com.intel.daal.data_management.data.KeyValueDataCollection;
-import com.intel.daal.data_management.data_source.*;
-import com.intel.daal.services.DaalContext;
-
 public class Service {
+
     public static void readRow(String line, int offset, int nCols, double[] data) throws IOException {
         if (line == null) {
             throw new IOException("Unable to read input dataset");
@@ -73,7 +74,7 @@ public class Service {
     }
 
     public static void readSparseData(String dataset, int nVectors, int nNonZeroValues, long[] rowOffsets,
-            long[] colIndices, double[] data) {
+                                      long[] colIndices, double[] data) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(dataset));
             readRow(bufferedReader.readLine(), 0, nVectors + 1, rowOffsets);
@@ -132,7 +133,7 @@ public class Service {
     }
 
     public static void printClassificationResult(float[] groundTruth, float[] classificationResults,
-            String classificatorName) {
+                                                 String classificatorName) {
         System.out.println(classificatorName + " classification:");
         System.out.println("Ground truth | Classification results");
 
@@ -142,7 +143,7 @@ public class Service {
     }
 
     public static void printClassificationResult(NumericTable groundTruth, NumericTable classificationResults,
-            String header1, String header2, String message, int nMaxRows) {
+                                                 String header1, String header2, String message, int nMaxRows) {
         int nCols = (int) groundTruth.getNumberOfColumns();
         int nRows = Math.min((int) groundTruth.getNumberOfRows(), nMaxRows);
 
@@ -157,13 +158,13 @@ public class Service {
         for (int i = 0; i < nRows; i++) {
             for (int j = 0; j < 1; j++) {
                 System.out.format("%+.0f\t\t%+.0f\n", dataGroundTruth.get(i * nCols + j),
-                        dataClassificationResults.get(i * nCols + j));
+                                  dataClassificationResults.get(i * nCols + j));
             }
         }
     }
 
     public static void printClassificationResult(long[] groundTruth, long[] classificationResults,
-            String classificatorName) {
+                                                 String classificatorName) {
         System.out.println(classificatorName + " classification:");
         System.out.println("Ground truth | Classification results");
 
@@ -173,7 +174,7 @@ public class Service {
     }
 
     public static void printClassificationResult(long[] groundTruth, int[] classificationResults,
-            String classificatorName) {
+                                                 String classificatorName) {
         System.out.println(classificatorName + " classification:");
         System.out.println("Ground truth | Classification results");
 
@@ -208,21 +209,17 @@ public class Service {
         printTriangularMatrix(results, (int) nDimensions, header);
     }
 
-    public static boolean isUpper(NumericTable.StorageLayout layout)
-    {
-        if (layout.ordinal() == NumericTable.StorageLayout.upperPackedSymmetricMatrix.ordinal()  ||
-            layout.ordinal() == NumericTable.StorageLayout.upperPackedTriangularMatrix.ordinal())
-        {
+    public static boolean isUpper(NumericTable.StorageLayout layout) {
+        if (layout.ordinal() == NumericTable.StorageLayout.upperPackedSymmetricMatrix.ordinal() ||
+            layout.ordinal() == NumericTable.StorageLayout.upperPackedTriangularMatrix.ordinal()) {
             return true;
         }
         return false;
     }
 
-    public static boolean isLower(NumericTable.StorageLayout layout)
-    {
-        if (layout.ordinal() == NumericTable.StorageLayout.lowerPackedSymmetricMatrix.ordinal()  ||
-            layout.ordinal() == NumericTable.StorageLayout.lowerPackedTriangularMatrix.ordinal())
-        {
+    public static boolean isLower(NumericTable.StorageLayout layout) {
+        if (layout.ordinal() == NumericTable.StorageLayout.lowerPackedSymmetricMatrix.ordinal() ||
+            layout.ordinal() == NumericTable.StorageLayout.lowerPackedTriangularMatrix.ordinal()) {
             return true;
         }
         return false;
@@ -251,8 +248,7 @@ public class Service {
         builder.append(header);
         builder.append("\n");
 
-        if( isLower(layout) )
-        {
+        if (isLower(layout)) {
             for (long i = 0; i < nRows; i++) {
                 for (long j = 0; j <= i; j++) {
                     String tmp = String.format("%-6.3f   ", result.get((int) (i * nNtCols + j)));
@@ -260,13 +256,11 @@ public class Service {
                 }
                 builder.append("\n");
             }
-        }
-        else if( isUpper(layout) )
-        {
+        } else if (isUpper(layout)) {
 
             for (long i = 0; i < nRows; i++) {
-                for(int k=0; k < i; k++)
-                        builder.append("         ");
+                for (int k = 0; k < i; k++)
+                    builder.append("         ");
                 for (long j = i; j < nCols; j++) {
                     String tmp = String.format("%-6.3f   ", result.get((int) (i * nNtCols + j)));
                     builder.append(tmp);
@@ -274,9 +268,7 @@ public class Service {
                 builder.append("\n");
             }
 
-        }
-        else if( isLower(layout) != true && isUpper(layout) != true)
-        {
+        } else if (isLower(layout) != true && isUpper(layout) != true) {
             for (long i = 0; i < nRows; i++) {
                 for (long j = 0; j < nCols; j++) {
                     String tmp = String.format("%-6.3f   ", result.get((int) (i * nNtCols + j)));
@@ -318,7 +310,7 @@ public class Service {
             int nElementsInRow = (int) (rowOffsets[i + 1] - rowOffsets[i]);
             for (int k = 0; k < nElementsInRow; k++) {
                 oneDenseRow[(int) (colIndices[(int) (rowOffsets[i] - 1 + k)] - 1)] = values[(int) (rowOffsets[i] - 1
-                        + k)];
+                                                                                                   + k)];
             }
             for (int j = 0; j < nCols; j++) {
                 String tmp = String.format("%-6.3f   ", oneDenseRow[j]);
@@ -345,17 +337,15 @@ public class Service {
         printNumericTable(header, nt, nt.getNumberOfRows());
     }
 
-    public static void printNumericTables(NumericTable dataTable1, NumericTable dataTable2,String title1, String title2 ,
-                                            String message, long nPrintedRows)
-    {
+    public static void printNumericTables(NumericTable dataTable1, NumericTable dataTable2, String title1, String title2,
+                                          String message, long nPrintedRows) {
         long nRows1 = dataTable1.getNumberOfRows();
         long nRows2 = dataTable2.getNumberOfRows();
         long nCols1 = dataTable1.getNumberOfColumns();
         long nCols2 = dataTable2.getNumberOfColumns();
 
         long nRows = Math.min(nRows1, nRows2);
-        if (nPrintedRows > 0)
-        {
+        if (nPrintedRows > 0) {
             nRows = Math.min(Math.min(nRows1, nRows2), nPrintedRows);
         }
 
@@ -372,13 +362,12 @@ public class Service {
 
         StringBuilder builderHelp = new StringBuilder();
         for (long j = 0; j < nCols1; j++) {
-                String tmp = String.format("%-6.3f   ", result1.get((int) (0 * nCols1 + j)));
-                builderHelp.append(tmp);
-            }
+            String tmp = String.format("%-6.3f   ", result1.get((int) (0 * nCols1 + j)));
+            builderHelp.append(tmp);
+        }
         int interval = builderHelp.length() - title1.length();
 
-        for(int i=0; i < interval; i++)
-        {
+        for (int i = 0; i < interval; i++) {
             builder.append(" ");
         }
         builder.append("     ");
@@ -401,7 +390,7 @@ public class Service {
     }
 
     public static void printAprioriItemsets(HomogenNumericTable largeItemsetsTable,
-            HomogenNumericTable largeItemsetsSupportTable) {
+                                            HomogenNumericTable largeItemsetsSupportTable) {
         /* Get sizes of tables to store large item sets */
         int nItemsInLargeItemsets = (int) largeItemsetsTable.getNumberOfRows();
         int largeItemsetCount = (int) largeItemsetsSupportTable.getNumberOfRows();
@@ -417,7 +406,7 @@ public class Service {
         IntBuffer bufLargeItemsetsSupportData = IntBuffer
                 .allocate(largeItemsetCount * (int) largeItemsetsSupportTable.getNumberOfColumns());
         bufLargeItemsetsSupportData = largeItemsetsSupportTable.getBlockOfRows(0, largeItemsetCount,
-                bufLargeItemsetsSupportData);
+                                                                               bufLargeItemsetsSupportData);
         int[] largeItemsetsSupportData = new int[bufLargeItemsetsSupportData.capacity()];
         bufLargeItemsetsSupportData.get(largeItemsetsSupportData);
 
@@ -459,7 +448,7 @@ public class Service {
     }
 
     public static void printAprioriRules(HomogenNumericTable leftItemsTable, HomogenNumericTable rightItemsTable,
-            HomogenNumericTable confidenceTable) {
+                                         HomogenNumericTable confidenceTable) {
         int nRulesToPrint = 20;
         /* Get sizes of tables to store association rules */
         int nLeftItems = (int) leftItemsTable.getNumberOfRows();
@@ -536,7 +525,7 @@ public class Service {
         long nUsers = ratings.getNumberOfRows();
         long nItems = ratings.getNumberOfColumns();
 
-        float[] ratingsData = ((HomogenNumericTable)ratings).getFloatArray();
+        float[] ratingsData = ((HomogenNumericTable) ratings).getFloatArray();
         IntBuffer usersOffsetBuf = IntBuffer.allocate(1);
         IntBuffer itemsOffsetBuf = IntBuffer.allocate(1);
         usersOffsetBuf = usersOffsetTable.getBlockOfRows(0, 1, usersOffsetBuf);
@@ -545,22 +534,22 @@ public class Service {
         int[] itemsOffsetData = new int[1];
         usersOffsetBuf.get(usersOffsetData);
         itemsOffsetBuf.get(itemsOffsetData);
-        long usersOffset = (long)usersOffsetData[0];
-        long itemsOffset = (long)itemsOffsetData[0];
+        long usersOffset = (long) usersOffsetData[0];
+        long itemsOffset = (long) itemsOffsetData[0];
 
         System.out.println(" User ID, Item ID, rating");
         for (long i = 0; i < nUsers; i++) {
             for (long j = 0; j < nItems; j++) {
                 long userId = i + usersOffset;
                 long itemId = j + itemsOffset;
-                System.out.println(userId + ", " + itemId + ", " + ratingsData[(int)(i * nItems + j)]);
+                System.out.println(userId + ", " + itemId + ", " + ratingsData[(int) (i * nItems + j)]);
             }
         }
     }
 
     public static void printTensor(String header, Tensor dataTensor, int nPrintedRows, int nPrintedCols) {
         long[] dims = dataTensor.getDimensions();
-        int nRows = (int)dims[0];
+        int nRows = (int) dims[0];
         if (nPrintedRows == 0 || nRows < nPrintedRows) nPrintedRows = nRows;
 
         int nCols = 1;
@@ -571,7 +560,7 @@ public class Service {
         long[] fixed = {};
         result = dataTensor.getSubtensor(fixed, 0, nPrintedRows, result);
 
-        if (nPrintedCols == 0 || nCols < nPrintedCols)  {
+        if (nPrintedCols == 0 || nCols < nPrintedCols) {
             nPrintedCols = nCols;
         }
 
@@ -590,24 +579,18 @@ public class Service {
 
     public static void printTensor3d(String header, Tensor dataTensor, int nFirstDim, int nSecondDim) {
         long[] dims = dataTensor.getDimensions();
-        int nRows = (int)dims[0];
-        int nCols = (int)dims[1];
-        int nThirdDim = (int)dims[2];
-        if(nFirstDim != 0)
-        {
+        int nRows = (int) dims[0];
+        int nCols = (int) dims[1];
+        int nThirdDim = (int) dims[2];
+        if (nFirstDim != 0) {
             nFirstDim = Math.min(nRows, nFirstDim);
-        }
-        else
-        {
+        } else {
             nFirstDim = nRows;
         }
 
-        if(nSecondDim != 0)
-        {
+        if (nSecondDim != 0) {
             nSecondDim = Math.min(nCols, nSecondDim);
-        }
-        else
-        {
+        } else {
             nSecondDim = nCols;
         }
 
@@ -619,19 +602,16 @@ public class Service {
         builder.append(header);
         builder.append("\n\n");
 
-        for(int i = 0; i < nFirstDim; i++)
-        {
-            for(int j=0; j < nSecondDim; j++)
-            {
-                for(int k=0; k < nThirdDim; k++)
-                {
-                    String tmp = String.format("%-6.3f   ", result.get((int) (i * nThirdDim * nSecondDim + j*nThirdDim + k)));
+        for (int i = 0; i < nFirstDim; i++) {
+            for (int j = 0; j < nSecondDim; j++) {
+                for (int k = 0; k < nThirdDim; k++) {
+                    String tmp = String.format("%-6.3f   ", result.get((int) (i * nThirdDim * nSecondDim + j * nThirdDim + k)));
                     builder.append(tmp);
                 }
                 builder.append("\n");
 
             }
-            if(i != (nFirstDim - 1))
+            if (i != (nFirstDim - 1))
                 builder.append("\n\n");
 
         }
@@ -642,7 +622,7 @@ public class Service {
     public static void printTensors(String header1, String header2, String message,
                                     Tensor dataTensor1, Tensor dataTensor2, int nPrintedRows) {
         long[] dims1 = dataTensor1.getDimensions();
-        int nRows1 = (int)dims1[0];
+        int nRows1 = (int) dims1[0];
         if (nPrintedRows == 0 || nRows1 < nPrintedRows) nPrintedRows = nRows1;
 
         int nCols1 = 1;
@@ -651,7 +631,7 @@ public class Service {
         }
 
         long[] dims2 = dataTensor2.getDimensions();
-        int nRows2 = (int)dims2[0];
+        int nRows2 = (int) dims2[0];
         if (nPrintedRows == 0 || nRows2 < nPrintedRows) nPrintedRows = nRows2;
 
         int nCols2 = 1;
@@ -688,19 +668,19 @@ public class Service {
 
     public static Tensor readTensorFromCSV(DaalContext context, String datasetFileName, boolean allowOneColumn) {
         FileDataSource dataSource = new FileDataSource(context, datasetFileName,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.DoAllocateNumericTable);
+                                                       DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                       DataSource.NumericTableAllocationFlag.DoAllocateNumericTable);
         dataSource.loadDataBlock();
         NumericTable nt = dataSource.getNumericTable();
-        int nRows = (int)nt.getNumberOfRows();
-        int nCols = (int)nt.getNumberOfColumns();
+        int nRows = (int) nt.getNumberOfRows();
+        int nCols = (int) nt.getNumberOfColumns();
         if (nCols > 1 || allowOneColumn) {
             long[] dims = {nRows, nCols};
             float[] data = new float[nRows * nCols];
             FloatBuffer buffer = FloatBuffer.allocate(nRows * nCols);
             buffer = nt.getBlockOfRows(0, nRows, buffer);
             for (int i = 0; i < nRows * nCols; i++) {
-                data[i] = (float)buffer.get(i);
+                data[i] = (float) buffer.get(i);
             }
 
             return new HomogenTensor(context, dims, data);
@@ -710,7 +690,7 @@ public class Service {
             FloatBuffer buffer = FloatBuffer.allocate(nRows);
             buffer = nt.getBlockOfRows(0, nRows, buffer);
             for (int i = 0; i < nRows; i++) {
-                data[i] = (float)buffer.get(i);
+                data[i] = (float) buffer.get(i);
             }
 
             return new HomogenTensor(context, dims, data);
@@ -719,8 +699,8 @@ public class Service {
 
     public static Tensor readTensorFromCSV(DaalContext context, String datasetFileName) {
         FileDataSource dataSource = new FileDataSource(context, datasetFileName,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.DoAllocateNumericTable);
+                                                       DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                       DataSource.NumericTableAllocationFlag.DoAllocateNumericTable);
         return readTensorFromCSV(context, datasetFileName, false);
     }
 
@@ -731,19 +711,19 @@ public class Service {
         int nDims = dims.length;
         int bufLength = nElements;
 
-        for(int i = 1; i < nDims; i++) {
+        for (int i = 1; i < nDims; i++) {
             bufLength *= dims[i];
         }
 
         FloatBuffer dataFloatSubtensor = FloatBuffer.allocate(bufLength);
 
         long fDims[] = {};
-        inputTensor.getSubtensor(fDims, (long)startPos, (long)nElements, dataFloatSubtensor);
+        inputTensor.getSubtensor(fDims, (long) startPos, (long) nElements, dataFloatSubtensor);
 
         float[] subtensorData = new float[bufLength];
         dataFloatSubtensor.get(subtensorData);
 
-        inputTensor.releaseSubtensor(fDims, (long)startPos, (long)nElements, dataFloatSubtensor);
+        inputTensor.releaseSubtensor(fDims, (long) startPos, (long) nElements, dataFloatSubtensor);
 
         return new HomogenTensor(context, dims, subtensorData);
     }
