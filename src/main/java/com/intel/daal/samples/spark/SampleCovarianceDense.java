@@ -32,7 +32,7 @@ import static com.intel.daal.examples.Util.dataRoot;
 
 public class SampleCovarianceDense {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         /* Create JavaSparkContext that holds SparkContext, loads defaults from the system properties and the classpath and sets the name */
         final SparkConf sparkConf = new SparkConf();
@@ -42,7 +42,7 @@ public class SampleCovarianceDense {
 
         /* Read from the distributed HDFS data set at a specified path */
         final DistributedHDFSDataSet dd = new DistributedHDFSDataSet(dataRoot + "/data/spark/CovarianceDense/", javaSparkContext);
-        final JavaRDD<HomogenNumericTable> homogenNumericTableJavaRDD = dd.getAsRDD();
+        final JavaRDD<HomogenNumericTable> homogenNumericTableJavaRDD = dd.getPackedNumericTablesForEachFileAsRDD();
 
         /* Compute a dense variance-covariance matrix for dataRDD */
         final SparkCovarianceDense.CovarianceResult result = SparkCovarianceDense.runCovariance(homogenNumericTableJavaRDD);
@@ -53,6 +53,8 @@ public class SampleCovarianceDense {
 
         printNumericTable("Covariance:", Covariance);
         printNumericTable("Mean:", Mean);
+
+        Thread.sleep(Long.MAX_VALUE);
 
         result.covariance.getContext().dispose();
         javaSparkContext.stop();

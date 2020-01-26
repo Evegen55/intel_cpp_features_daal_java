@@ -46,13 +46,13 @@ public class SparkCovarianceDense {
     }
 
     public static CovarianceResult runCovariance(JavaRDD<HomogenNumericTable> dataRDD) {
-        JavaRDD<PartialResult> partsRDD = computeStep1Local(dataRDD);
+        JavaRDD<PartialResult> partsRDD = computeStep1OnLocalNodes(dataRDD);
         PartialResult reducedPres = reducePartialResults(partsRDD);
         CovarianceResult result = finalizeMergeOnMasterNode(reducedPres);
         return result;
     }
 
-    private static JavaRDD<PartialResult> computeStep1Local(JavaRDD<HomogenNumericTable> dataRDD) {
+    private static JavaRDD<PartialResult> computeStep1OnLocalNodes(JavaRDD<HomogenNumericTable> dataRDD) {
         return dataRDD.map(new Function<HomogenNumericTable, PartialResult>() {
             public PartialResult call(HomogenNumericTable table) {
                 DaalContext localContext = new DaalContext();

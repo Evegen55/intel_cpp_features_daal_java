@@ -24,17 +24,8 @@
 
 package com.intel.daal.samples.spark;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
 import org.apache.spark.SparkConf;
-
-import scala.Tuple2;
 
 import com.intel.daal.data_management.data.*;
 import com.intel.daal.data_management.data_source.*;
@@ -50,7 +41,7 @@ public class SamplePcaCorDense {
         /* Read from the distributed HDFS data set at a specified path */
         StringDataSource templateDataSource = new StringDataSource( context, "" );
         DistributedHDFSDataSet dd = new DistributedHDFSDataSet( "/Spark/PcaCorDense/data/", templateDataSource );
-        JavaRDD<HomogenNumericTable> dataRDD = dd.getAsRDD(sc);
+        JavaRDD<HomogenNumericTable> dataRDD = dd.getPackedNumericTablesForEachFileAsRDD(sc);
 
         /* Compute PCA decomposition for dataRDD using the correlation method */
         SparkPcaCorDense.PCAResult result = SparkPcaCorDense.runPCA(context, dataRDD);

@@ -140,23 +140,23 @@ public class DistributedHDFSDataSet extends DistributedDataSet implements Serial
     }
 
     /**
-     *
      * @return
      */
-    public JavaRDD<HomogenNumericTable> getAsRDD() {
+    public JavaRDD<HomogenNumericTable> getPackedNumericTablesForEachFileAsRDD() {
 
-        JavaPairRDD<String, String> dataWithId = javaSparkContext.wholeTextFiles(_filename);
+        final JavaPairRDD<String, String> dataWithId = javaSparkContext.wholeTextFiles(_filename);
 
-        JavaRDD<HomogenNumericTable> data = dataWithId.map((Function<Tuple2<String, String>, HomogenNumericTable>) tup -> {
-            DaalContext context = new DaalContext();
+        final JavaRDD<HomogenNumericTable> data = dataWithId.map(
+                (Function<Tuple2<String, String>, HomogenNumericTable>) fileNameAndContentTuple -> {
+                    DaalContext context = new DaalContext();
 
-            HomogenNumericTable dataTable = createHomogenTable(context, tup._2);
-            dataTable.pack();
+                    HomogenNumericTable dataTable = createHomogenTable(context, fileNameAndContentTuple._2);
+                    dataTable.pack();
 
-            context.dispose();
+                    context.dispose();
 
-            return dataTable;
-        });
+                    return dataTable;
+                });
 
         return data;
     }
@@ -475,7 +475,7 @@ public class DistributedHDFSDataSet extends DistributedDataSet implements Serial
     }
 
     // TODO: 26.01.20 double-check classes - they may not use appropriate logic because weren't refactored
-    public JavaRDD<HomogenNumericTable> getAsRDD(final JavaSparkContext sc) {
-        return getAsRDD();
+    public JavaRDD<HomogenNumericTable> getPackedNumericTablesForEachFileAsRDD(final JavaSparkContext sc) {
+        return getPackedNumericTablesForEachFileAsRDD();
     }
 }
