@@ -24,19 +24,19 @@
 
 package com.intel.daal.samples.spark;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
-import org.apache.spark.SparkConf;
-
-import com.intel.daal.algorithms.covariance.*;
-import com.intel.daal.data_management.data.*;
-import com.intel.daal.services.*;
+import com.intel.daal.algorithms.covariance.DistributedStep1Local;
+import com.intel.daal.algorithms.covariance.DistributedStep2Master;
+import com.intel.daal.algorithms.covariance.DistributedStep2MasterInputId;
+import com.intel.daal.algorithms.covariance.InputId;
+import com.intel.daal.algorithms.covariance.Method;
+import com.intel.daal.algorithms.covariance.PartialResult;
+import com.intel.daal.algorithms.covariance.Result;
+import com.intel.daal.algorithms.covariance.ResultId;
+import com.intel.daal.data_management.data.HomogenNumericTable;
+import com.intel.daal.services.DaalContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 
 public class SparkCovarianceDense {
     /* Class containing the algorithm results */
@@ -45,17 +45,14 @@ public class SparkCovarianceDense {
         public HomogenNumericTable mean;
     }
 
-    public static CovarianceResult runCovariance(DaalContext context, JavaRDD<HomogenNumericTable> dataRDD) {
-        JavaRDD<PartialResult> partsRDD = computeStep1Local(context, dataRDD);
-
-        PartialResult reducedPres = reducePartialResults(context, partsRDD);
-
-        CovarianceResult result = finalizeMergeOnMasterNode(context, reducedPres);
-
+    public static CovarianceResult runCovariance(JavaRDD<HomogenNumericTable> dataRDD) {
+        JavaRDD<PartialResult> partsRDD = computeStep1Local(dataRDD);
+        PartialResult reducedPres = reducePartialResults(partsRDD);
+        CovarianceResult result = finalizeMergeOnMasterNode(reducedPres);
         return result;
     }
 
-    private static JavaRDD<PartialResult> computeStep1Local(DaalContext context, JavaRDD<HomogenNumericTable> dataRDD) {
+    private static JavaRDD<PartialResult> computeStep1Local(JavaRDD<HomogenNumericTable> dataRDD) {
         return dataRDD.map(new Function<HomogenNumericTable, PartialResult>() {
             public PartialResult call(HomogenNumericTable table) {
                 DaalContext localContext = new DaalContext();
@@ -77,7 +74,7 @@ public class SparkCovarianceDense {
         });
     }
 
-    private static PartialResult reducePartialResults(DaalContext context, JavaRDD<PartialResult> partsRDD) {
+    private static PartialResult reducePartialResults(JavaRDD<PartialResult> partsRDD) {
         return partsRDD.reduce(new Function2<PartialResult, PartialResult, PartialResult>() {
             public PartialResult call(PartialResult pr1, PartialResult pr2) {
                 DaalContext localContext = new DaalContext();
@@ -101,10 +98,12 @@ public class SparkCovarianceDense {
         });
     }
 
-    private static CovarianceResult finalizeMergeOnMasterNode(DaalContext context, PartialResult reducedPres) {
+    private static CovarianceResult finalizeMergeOnMasterNode(PartialResult reducedPres) {
+
+        final DaalContext context = new DaalContext();
 
         /* Create an algorithm to compute a dense variance-covariance matrix on the master node */
-        DistributedStep2Master covarianceMaster = new DistributedStep2Master(context, Double.class, Method.defaultDense);
+        final DistributedStep2Master covarianceMaster = new DistributedStep2Master(context, Double.class, Method.defaultDense);
 
         /* Set the reduced partial result to the master algorithm to compute the final result */
         reducedPres.unpack(context);
@@ -114,9 +113,9 @@ public class SparkCovarianceDense {
         covarianceMaster.compute();
 
         /* Finalize computations and retrieve the results */
-        Result res = covarianceMaster.finalizeCompute();
+        final Result res = covarianceMaster.finalizeCompute();
 
-        CovarianceResult covResult = new CovarianceResult();
+        final CovarianceResult covResult = new CovarianceResult();
         covResult.covariance = (HomogenNumericTable)res.get(ResultId.covariance);
         covResult.mean = (HomogenNumericTable)res.get(ResultId.mean);
         return covResult;

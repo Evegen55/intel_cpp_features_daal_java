@@ -1,19 +1,19 @@
 /* file: SampleCovarianceDense.java */
 /*******************************************************************************
-* Copyright 2017-2020 Intel Corporation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*******************************************************************************/
+ * Copyright 2017-2020 Intel Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 
 /*
  //  Content:
@@ -23,46 +23,39 @@
 
 package com.intel.daal.samples.spark;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
+import com.intel.daal.data_management.data.HomogenNumericTable;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
-import scala.Tuple2;
-
-import com.intel.daal.data_management.data.*;
-import com.intel.daal.data_management.data_source.*;
-import com.intel.daal.services.*;
+import static com.intel.daal.examples.Util.dataRoot;
 
 public class SampleCovarianceDense {
-    public static void main(String[] args) {
-        DaalContext context = new DaalContext();
 
-        /* Create JavaSparkContext that loads defaults from the system properties and the classpath and sets the name */
-        JavaSparkContext sc = new JavaSparkContext(new SparkConf().setAppName("Spark covariance(dense)"));
+    public static void main(String[] args) {
+
+        /* Create JavaSparkContext that holds SparkContext, loads defaults from the system properties and the classpath and sets the name */
+        final SparkConf sparkConf = new SparkConf();
+        sparkConf.setMaster("local[*]");
+        sparkConf.setAppName("Spark covariance(dense)");
+        final JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConf);
 
         /* Read from the distributed HDFS data set at a specified path */
-        StringDataSource templateDataSource = new StringDataSource( context, "" );
-        DistributedHDFSDataSet dd = new DistributedHDFSDataSet( "/Spark/CovarianceDense/data/", templateDataSource );
-        JavaRDD<HomogenNumericTable> dataRDD = dd.getAsRDD(sc);
+        final DistributedHDFSDataSet dd = new DistributedHDFSDataSet(dataRoot + "/data/spark/CovarianceDense/", javaSparkContext);
+        final JavaRDD<HomogenNumericTable> homogenNumericTableJavaRDD = dd.getAsRDD();
 
         /* Compute a dense variance-covariance matrix for dataRDD */
-        SparkCovarianceDense.CovarianceResult result = SparkCovarianceDense.runCovariance(context, dataRDD);
+        final SparkCovarianceDense.CovarianceResult result = SparkCovarianceDense.runCovariance(homogenNumericTableJavaRDD);
 
         /* Print the results */
-        HomogenNumericTable Covariance  = result.covariance;
-        HomogenNumericTable Mean = result.mean;
+        final HomogenNumericTable Covariance = result.covariance;
+        final HomogenNumericTable Mean = result.mean;
 
-        printNumericTable("Covariance:",  Covariance);
+        printNumericTable("Covariance:", Covariance);
         printNumericTable("Mean:", Mean);
 
-        context.dispose();
-        sc.stop();
+        result.covariance.getContext().dispose();
+        javaSparkContext.stop();
     }
 
     private static void printNumericTable(String header, HomogenNumericTable nt) {
