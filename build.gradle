@@ -12,9 +12,32 @@ repositories {
     flatDir {
         dirs '/opt/intel/compilers_and_libraries_2020.0.166/linux/daal/lib'
     }
+    maven {
+        url 'https://dl.bintray.com/spark-packages/maven/'
+    }
+}
+
+ext {
+    sparkMajorVersion = '2.4'
+    datastaxVersion = sparkMajorVersion + '.1'
+    sparkSqlVersion = sparkMajorVersion + '.4'
+    sparkCoreVersion = sparkMajorVersion + '.4'
+    sparkMlVersion = sparkMajorVersion + '.4'
+    sparkStreamingVersion = sparkMajorVersion + '.4'
+    scalaVersion = '2.12'
+    scalaLibraryVersion = scalaVersion + '.10'
+    lombokVersion = '1.18.2'
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.scala-lang/scala-library
+    compile group: 'org.scala-lang', name: 'scala-library', version: scalaLibraryVersion
+    // https://mvnrepository.com/artifact/org.apache.spark/spark-core
+    compile group: 'org.apache.spark', name: 'spark-core_' + scalaVersion, version: sparkCoreVersion
+    // https://mvnrepository.com/artifact/org.apache.spark/spark-sql
+    compile group: 'org.apache.spark', name: 'spark-sql_' + scalaVersion, version: sparkSqlVersion
+    // https://mvnrepository.com/artifact/org.apache.spark/spark-mllib
+    compile group: 'org.apache.spark', name: 'spark-mllib_' + scalaVersion, version: sparkMlVersion
     compile group: 'com.intel.daal', name: 'daal', version: '2020.0.166'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
