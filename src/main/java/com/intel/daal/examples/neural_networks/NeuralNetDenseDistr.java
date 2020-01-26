@@ -1,16 +1,18 @@
 /* file: NeuralNetDenseDistr.java */
 /*******************************************************************************
-* Copyright 2014-2018 Intel Corporation.
+* Copyright 2014-2019 Intel Corporation
 *
-* This software and the related documents are Intel copyrighted  materials,  and
-* your use of  them is  governed by the  express license  under which  they were
-* provided to you (License).  Unless the License provides otherwise, you may not
-* use, modify, copy, publish, distribute,  disclose or transmit this software or
-* the related documents without Intel's prior written permission.
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
 *
-* This software and the related documents  are provided as  is,  with no express
-* or implied  warranties,  other  than those  that are  expressly stated  in the
-* License.
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
 *******************************************************************************/
 
 /*
@@ -21,22 +23,27 @@
 
 package com.intel.daal.examples.neural_networks;
 
-import com.intel.daal.algorithms.neural_networks.*;
-import com.intel.daal.algorithms.neural_networks.prediction.*;
-import com.intel.daal.algorithms.neural_networks.training.*;
-import com.intel.daal.algorithms.neural_networks.layers.LayerDescriptor;
-import com.intel.daal.algorithms.neural_networks.layers.NextLayers;
-import com.intel.daal.algorithms.neural_networks.layers.ForwardLayer;
-import com.intel.daal.algorithms.neural_networks.layers.BackwardLayer;
-import com.intel.daal.algorithms.neural_networks.layers.ForwardInputId;
-import com.intel.daal.algorithms.neural_networks.layers.ForwardResultId;
-import com.intel.daal.algorithms.neural_networks.layers.BackwardInputId;
-import com.intel.daal.algorithms.neural_networks.layers.BackwardResultId;
-import com.intel.daal.data_management.data.Tensor;
-import com.intel.daal.data_management.data.HomogenTensor;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionBatch;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionModel;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionModelInputId;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionResult;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionResultId;
+import com.intel.daal.algorithms.neural_networks.prediction.PredictionTensorInputId;
+import com.intel.daal.algorithms.neural_networks.training.DistributedPartialResult;
+import com.intel.daal.algorithms.neural_networks.training.DistributedPartialResultId;
+import com.intel.daal.algorithms.neural_networks.training.DistributedStep1Local;
+import com.intel.daal.algorithms.neural_networks.training.DistributedStep1LocalInputId;
+import com.intel.daal.algorithms.neural_networks.training.DistributedStep2Master;
+import com.intel.daal.algorithms.neural_networks.training.DistributedStep2MasterInputId;
+import com.intel.daal.algorithms.neural_networks.training.PartialResult;
+import com.intel.daal.algorithms.neural_networks.training.TrainingInputId;
+import com.intel.daal.algorithms.neural_networks.training.TrainingModel;
+import com.intel.daal.algorithms.neural_networks.training.TrainingResult;
+import com.intel.daal.algorithms.neural_networks.training.TrainingResultId;
+import com.intel.daal.algorithms.neural_networks.training.TrainingTopology;
 import com.intel.daal.data_management.data.HomogenNumericTable;
 import com.intel.daal.data_management.data.NumericTable;
-import com.intel.daal.data_management.data_source.DataSource;
+import com.intel.daal.data_management.data.Tensor;
 import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 

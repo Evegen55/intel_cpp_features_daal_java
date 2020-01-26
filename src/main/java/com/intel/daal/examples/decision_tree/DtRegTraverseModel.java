@@ -1,17 +1,19 @@
 /* file: DtRegTraverseModel.java */
 /*******************************************************************************
-* Copyright 2014-2018 Intel Corporation.
-*
-* This software and the related documents are Intel copyrighted  materials,  and
-* your use of  them is  governed by the  express license  under which  they were
-* provided to you (License).  Unless the License provides otherwise, you may not
-* use, modify, copy, publish, distribute,  disclose or transmit this software or
-* the related documents without Intel's prior written permission.
-*
-* This software and the related documents  are provided as  is,  with no express
-* or implied  warranties,  other  than those  that are  expressly stated  in the
-* License.
-*******************************************************************************/
+ * Copyright 2014-2019 Intel Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 
 /*
  //  Content:
@@ -26,10 +28,11 @@
  * <a name="DAAL-EXAMPLE-JAVA-DtRegTraverseModel">
  * @example DtRegTraverseModel.java
  */
-
 package com.intel.daal.examples.decision_tree;
 
-import com.intel.daal.algorithms.regression.TreeNodeVisitor;
+import com.intel.daal.algorithms.tree_utils.regression.TreeNodeVisitor;
+import com.intel.daal.algorithms.tree_utils.regression.LeafNodeDescriptor;
+import com.intel.daal.algorithms.tree_utils.SplitNodeDescriptor;
 import com.intel.daal.algorithms.decision_tree.regression.Model;
 import com.intel.daal.algorithms.decision_tree.regression.prediction.*;
 import com.intel.daal.algorithms.decision_tree.regression.training.*;
@@ -43,19 +46,23 @@ import com.intel.daal.examples.utils.Service;
 import com.intel.daal.services.DaalContext;
 import com.intel.daal.data_management.data.*;
 
+import static com.intel.daal.examples.Util.dataRoot;
+
 class DtRegPrintNodeVisitor extends TreeNodeVisitor {
     @Override
-    public boolean onLeafNode(long level, double response) {
-        if(level != 0)
-            printTab(level);
-        System.out.println("Level " + level + ", leaf node. Response value = " + response);
+    public boolean onLeafNode(LeafNodeDescriptor desc) {
+        if (desc.level != 0)
+            printTab(desc.level);
+        System.out.println("Level " + desc.level + ", leaf node. Response value = " + desc.response +
+                           ", Impurity = " + desc.impurity + ", Number of samples = " + desc.nNodeSampleCount);
         return true;
     }
 
-    public boolean onSplitNode(long level, long featureIndex, double featureValue){
-        if(level != 0)
-            printTab(level);
-        System.out.println("Level " + level + ", split node. Feature index = " + featureIndex + ", feature value = " + featureValue);
+    public boolean onSplitNode(SplitNodeDescriptor desc) {
+        if (desc.level != 0)
+            printTab(desc.level);
+        System.out.println("Level " + desc.level + ", split node. Feature index = " + desc.featureIndex + ", feature value = " + desc.featureValue +
+                           ", Impurity = " + desc.impurity + ", Number of samples = " + desc.nNodeSampleCount);
         return true;
     }
 
@@ -70,10 +77,10 @@ class DtRegPrintNodeVisitor extends TreeNodeVisitor {
 
 class DtRegTraverseModel {
     /* Input data set parameters */
-    private static final String trainDataset  ="../data/batch/decision_tree_train.csv";
-    private static final String pruneDataset  ="../data/batch/decision_tree_prune.csv";
+    private static final String trainDataset = dataRoot + "/data/batch/decision_tree_train.csv";
+    private static final String pruneDataset = dataRoot + "/data/batch/decision_tree_prune.csv";
 
-    private static final int nFeatures     = 5; /* Number of features in training and testing data sets */
+    private static final int nFeatures = 5; /* Number of features in training and testing data sets */
 
     private static DaalContext context = new DaalContext();
 
@@ -86,8 +93,8 @@ class DtRegTraverseModel {
     private static TrainingResult trainModel() {
         /* Retrieve the data from the input data sets */
         FileDataSource trainDataSource = new FileDataSource(context, trainDataset,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
+                                                            DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                            DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
 
         /* Create Numeric Tables for training data and dependent variables */
         NumericTable trainData = new HomogenNumericTable(context, Float.class, nFeatures, 0, NumericTable.AllocationFlag.NotAllocate);
@@ -101,8 +108,8 @@ class DtRegTraverseModel {
 
         /* Retrieve the pruning data from the input data sets */
         FileDataSource pruneDataSource = new FileDataSource(context, pruneDataset,
-                DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
-                DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
+                                                            DataSource.DictionaryCreationFlag.DoDictionaryFromContext,
+                                                            DataSource.NumericTableAllocationFlag.NotAllocateNumericTable);
 
         /* Create Numeric Tables for pruning data and dependent variables */
         NumericTable pruneData = new HomogenNumericTable(context, Float.class, nFeatures, 0, NumericTable.AllocationFlag.NotAllocate);
@@ -130,6 +137,6 @@ class DtRegTraverseModel {
     private static void printModel(TrainingResult trainingResult) {
         Model m = trainingResult.get(TrainingResultId.model);
         DtRegPrintNodeVisitor visitor = new DtRegPrintNodeVisitor();
-        m.traverseDF(visitor);
+        m.traverseDFS(visitor);
     }
 }
