@@ -24,19 +24,20 @@
 
 package com.intel.daal.samples.spark;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-
-import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
-import org.apache.spark.SparkConf;
-
-import com.intel.daal.algorithms.covariance.*;
-import com.intel.daal.data_management.data.*;
-import com.intel.daal.services.*;
+import com.intel.daal.algorithms.covariance.DistributedStep1Local;
+import com.intel.daal.algorithms.covariance.DistributedStep2Master;
+import com.intel.daal.algorithms.covariance.DistributedStep2MasterInputId;
+import com.intel.daal.algorithms.covariance.InputId;
+import com.intel.daal.algorithms.covariance.Method;
+import com.intel.daal.algorithms.covariance.PartialResult;
+import com.intel.daal.algorithms.covariance.Result;
+import com.intel.daal.algorithms.covariance.ResultId;
+import com.intel.daal.data_management.data.CSRNumericTable;
+import com.intel.daal.data_management.data.HomogenNumericTable;
+import com.intel.daal.services.DaalContext;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
 
 public class SparkCovarianceCSR {
     /* Class containing the algorithm results */
