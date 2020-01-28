@@ -225,30 +225,30 @@ public class DistributedHDFSDataSet extends DistributedDataSet implements Serial
         return data;
     }
 
-    public JavaPairRDD<Integer, NumericTable> getCSRAsPairRDDWithIndex(JavaSparkContext sc) throws IOException {
+    public JavaPairRDD<Integer, NumericTable> getCSRAsPairRDDWithIndex() {
 
-        JavaPairRDD<Tuple2<String, String>, Long> dataWithId = sc.wholeTextFiles(_filename).zipWithIndex();
+        final JavaPairRDD<Tuple2<String, String>, Long> dataWithId = javaSparkContext
+                .wholeTextFiles(_filename)
+                .zipWithIndex();
 
-        JavaPairRDD<Integer, NumericTable> data = dataWithId.mapToPair(
-                new PairFunction<Tuple2<Tuple2<String, String>, Long>, Integer, NumericTable>() {
-                    public Tuple2<Integer, NumericTable> call(Tuple2<Tuple2<String, String>, Long> tup) throws IOException {
+        final JavaPairRDD<Integer, NumericTable> integerNumericTableJavaPairRDD = dataWithId.mapToPair(
 
-                        DaalContext context = new DaalContext();
+                (PairFunction<Tuple2<Tuple2<String, String>, Long>, Integer, NumericTable>) fileNameAndContentTuple -> {
 
-                        String data = tup._1._2;
+                    final DaalContext context = new DaalContext();
 
-                        CSRNumericTable dataTable = createSparseTable(context, data);
-                        dataTable.pack();
+                    String data = fileNameAndContentTuple._1._2;
+                    CSRNumericTable dataTable = createSparseTable(context, data);
+                    dataTable.pack();
 
-                        context.dispose();
+                    context.dispose();
 
-                        String fileName = tup._1._1;
-                        String[] tokens = fileName.split("[_\\.]");
-                        return new Tuple2<Integer, NumericTable>(Integer.parseInt(tokens[tokens.length - 2]) - 1, (NumericTable) dataTable);
-                    }
+                    String fileName = fileNameAndContentTuple._1._1;
+                    String[] tokens = fileName.split("[_\\.]");
+                    return new Tuple2<>(Integer.parseInt(tokens[tokens.length - 2]) - 1, (NumericTable) dataTable);
                 });
 
-        return data;
+        return integerNumericTableJavaPairRDD;
     }
 
     public static JavaPairRDD<Integer, Tuple2<HomogenNumericTable, HomogenNumericTable>> getMergedDataAndLabelsPairRDD(String trainDatafilesPath,

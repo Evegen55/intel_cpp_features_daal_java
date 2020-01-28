@@ -26,49 +26,51 @@
 
 package com.intel.daal.samples.spark;
 
-import java.util.List;
-import java.nio.DoubleBuffer;
-import java.io.IOException;
-import java.lang.ClassNotFoundException;
-
-import org.apache.spark.api.java.*;
-import org.apache.spark.api.java.function.*;
+import com.intel.daal.algorithms.implicit_als.prediction.ratings.RatingsResult;
+import com.intel.daal.algorithms.implicit_als.prediction.ratings.RatingsResultId;
+import com.intel.daal.algorithms.implicit_als.training.DistributedPartialResultStep4;
+import com.intel.daal.algorithms.implicit_als.training.DistributedPartialResultStep4Id;
+import com.intel.daal.data_management.data.NumericTable;
+import com.intel.daal.services.DaalContext;
 import org.apache.spark.SparkConf;
-
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 import scala.Tuple3;
 
-import com.intel.daal.data_management.data.*;
-import com.intel.daal.data_management.data_source.*;
-import com.intel.daal.algorithms.implicit_als.*;
-import com.intel.daal.algorithms.implicit_als.training.*;
-import com.intel.daal.algorithms.implicit_als.prediction.ratings.*;
-import com.intel.daal.services.*;
+import java.io.IOException;
+import java.nio.DoubleBuffer;
+import java.util.List;
+
+import static com.intel.daal.examples.Util.dataRoot;
 
 public class SampleImplicitALSCSR {
-    public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalAccessException {
-        DaalContext context = new DaalContext();
 
-        /* Create JavaSparkContext that loads defaults from the system properties and the classpath and sets the name */
-        JavaSparkContext sc = new JavaSparkContext(new SparkConf().setAppName("Spark Implicit ALS"));
+    public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalAccessException, InterruptedException {
+
+        /* Create JavaSparkContext that holds SparkContext, loads defaults from the system properties and the classpath and sets the name */
+        final SparkConf sparkConf = new SparkConf();
+        sparkConf.setMaster("local[*]");
+        sparkConf.setAppName("Spark Implicit ALS");
+        final JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConf);
 
         /* Read from the distributed HDFS data set at a specified path */
-        StringDataSource templateDataSource = new StringDataSource(context, "");
+        final DistributedHDFSDataSet ddTrain = new DistributedHDFSDataSet(dataRoot + "/data/spark/ImplicitALSCSRTrans", javaSparkContext);
 
-        DistributedHDFSDataSet ddTrain = new DistributedHDFSDataSet("/Spark/ImplicitALSCSR/data/ImplicitALSCSRTrans_*",
-                                                                    templateDataSource );
+        final JavaPairRDD<Integer, NumericTable> dataRDD = ddTrain.getCSRAsPairRDDWithIndex();
 
-        JavaPairRDD<Integer, NumericTable> dataRDD = ddTrain.getCSRAsPairRDDWithIndex(sc);
-
-        SparkImplicitALSCSR.TrainingResult trainedModel = SparkImplicitALSCSR.trainModel(sc, dataRDD);
+        final SparkImplicitALSCSR.TrainingResult trainedModel = SparkImplicitALSCSR.trainModel(javaSparkContext, dataRDD);
         printTrainedModel(trainedModel);
 
-        JavaRDD<Tuple3<Integer, Integer, RatingsResult>> predictedRatings =
+        final JavaRDD<Tuple3<Integer, Integer, RatingsResult>> predictedRatings =
             SparkImplicitALSCSR.testModel(trainedModel.usersFactors, trainedModel.itemsFactors);
+
         printPredictedRatings(predictedRatings);
 
-        context.dispose();
-        sc.stop();
+//        Thread.sleep(Long.MAX_VALUE);
+
+        javaSparkContext.stop();
     }
 
     public static void printTrainedModel(SparkImplicitALSCSR.TrainingResult trainedModel) throws IllegalAccessException {

@@ -54,7 +54,7 @@ public class SampleCovarianceDense {
         printNumericTable("Covariance:", Covariance);
         printNumericTable("Mean:", Mean);
 
-        Thread.sleep(Long.MAX_VALUE);
+//        Thread.sleep(Long.MAX_VALUE);
 
         result.covariance.getContext().dispose();
         javaSparkContext.stop();
